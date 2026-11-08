@@ -49,13 +49,15 @@ export const NavigationHeader: React.FC = () => {
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded bg-slate-800 border border-slate-700/80 flex items-center justify-center font-mono font-bold text-amber-200/90 text-sm shadow-xs">
-            POS
+            S
           </div>
-          <div className="hidden md:flex flex-col">
-            <span className="text-xs font-bold tracking-wider uppercase text-stone-200">Terminal 01</span>
+          <div className="flex flex-col">
+            <span className="text-xs font-bold tracking-wider uppercase text-stone-200 truncate max-w-[140px] sm:max-w-none">
+              Samsara Bar and Restaurant
+            </span>
             <span className="text-[10px] text-stone-400 font-mono flex items-center gap-1 font-medium">
               <Radio className="w-2.5 h-2.5 text-emerald-400" />
-              ONLINE &bull; SUPABASE
+              TERMINAL 01 &bull; ONLINE
             </span>
           </div>
         </div>

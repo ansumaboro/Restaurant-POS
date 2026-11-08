@@ -1,4 +1,4 @@
-# Bar & Restaurant POS — Commercial Terminal
+# Samsara Bar and Restaurant — Commercial POS Terminal
 
 An enterprise-grade, ultra-streamlined, three-screen Point of Sale (POS) and inventory management application designed for bars, counters, and restaurants. Built strictly for zero-friction speed and daily operational agility.
 

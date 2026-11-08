@@ -57,9 +57,9 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
           <div id="printable-receipt" className="bg-white p-5 rounded-xl border border-stone-200 text-stone-800 shadow-xs">
             {/* Business Header */}
             <div className="text-center pb-4 border-b border-dashed border-stone-300">
-              <h2 className="text-base font-bold text-stone-900 tracking-wider">THE BAR &amp; GRILL</h2>
+              <h2 className="text-base font-bold text-stone-900 tracking-wider">SAMSARA BAR AND RESTAURANT</h2>
               <p className="text-[11px] text-stone-500 font-medium">Terminal 01 &bull; Commercial Counter POS</p>
-              <p className="text-[10px] text-stone-400 mt-1">Tax ID: REG-8849-0129</p>
+              <p className="text-[10px] text-stone-400 mt-1">GSTIN: 07AAAAA0000A1Z5</p>
             </div>
 
             {/* Bill Metadata */}

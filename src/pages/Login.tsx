@@ -71,10 +71,10 @@ export const Login: React.FC = () => {
             <Terminal className="w-6 h-6 text-amber-200/90" />
           </div>
           <h1 className="text-xl font-bold tracking-tight text-stone-900 uppercase font-mono">
-            Restaurant &amp; Bar POS
+            Samsara Bar and Restaurant
           </h1>
           <p className="text-xs text-stone-500 font-mono mt-1 font-medium">
-            Commercial Terminal Authentication
+            Commercial POS Terminal Authentication
           </p>
         </div>
 
