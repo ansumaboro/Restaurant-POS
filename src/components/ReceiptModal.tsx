@@ -13,6 +13,7 @@ interface ReceiptModalProps {
   cashTendered?: number;
   changeDue?: number;
   cashierName?: string;
+  tableName?: string;
 }
 
 export const ReceiptModal: React.FC<ReceiptModalProps> = ({
@@ -25,6 +26,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
   cashTendered = 0,
   changeDue = 0,
   cashierName = 'Cashier',
+  tableName,
 }) => {
   if (!isOpen || !invoice) return null;
 
@@ -68,6 +70,14 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
                 <span className="text-stone-500">Invoice:</span>
                 <span className="font-bold text-stone-900">#{shortInvoiceId}</span>
               </div>
+              {(tableName || invoice.table?.table_number) && (
+                <div className="flex justify-between">
+                  <span className="text-stone-500">Table:</span>
+                  <span className="font-bold text-stone-900">
+                    {tableName || `${invoice.table?.table_number}${invoice.table?.section ? ` (${invoice.table.section})` : ''}`}
+                  </span>
+                </div>
+              )}
               <div className="flex justify-between">
                 <span className="text-stone-500">Date/Time:</span>
                 <span className="text-stone-700">{formatDateTime(invoice.created_at || new Date().toISOString())}</span>

@@ -38,6 +38,8 @@ export interface MenuItem {
   inventory_item_id: string | null;
   category?: Category | null;
   inventory_item?: InventoryItem | null;
+  is_veg?: boolean | null; // true = Veg, false = Non-Veg, null = Drinks/Alcohol/Other
+  sub_category?: string | null;
 }
 
 export type TransactionType = 'purchase' | 'audit_correction';
@@ -57,16 +59,33 @@ export interface StockLog {
   } | null;
 }
 
+export type TableStatus = 'available' | 'occupied' | 'reserved';
+
+export interface RestaurantTable {
+  id: string;
+  table_number: string;
+  section: string;
+  seating_capacity: number;
+  status: TableStatus;
+  is_active: boolean;
+  created_at?: string;
+  activeInvoice?: Invoice | null;
+  itemsCount?: number;
+  runningTotal?: number;
+}
+
 export type PaymentStatus = 'pending' | 'paid' | 'refunded';
 
 export interface Invoice {
   id: string;
+  table_id?: string | null;
   subtotal: number;
   tax_amount: number;
   discount_amount: number;
   total_amount: number;
   payment_status: PaymentStatus;
   created_at: string;
+  table?: RestaurantTable | null;
   items?: InvoiceItem[];
   payments?: Payment[];
 }

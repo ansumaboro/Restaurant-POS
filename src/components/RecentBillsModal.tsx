@@ -99,6 +99,11 @@ export const RecentBillsModal: React.FC<RecentBillsModalProps> = ({
                       >
                         <td className="py-2.5 px-3">
                           <span className="text-stone-900 font-bold">#{inv.id.slice(0, 8).toUpperCase()}</span>
+                          {inv.table && (
+                            <span className="block text-[10px] text-amber-900 font-semibold">
+                              {inv.table.table_number}
+                            </span>
+                          )}
                         </td>
                         <td className="py-2.5 px-3 text-stone-500 text-[11px]">
                           {formatDateTime(inv.created_at)}
@@ -128,6 +133,11 @@ export const RecentBillsModal: React.FC<RecentBillsModalProps> = ({
                     <div className="text-sm font-bold text-stone-900">
                       Invoice #{selectedInvoice.id.slice(0, 8).toUpperCase()}
                     </div>
+                    {selectedInvoice.table && (
+                      <div className="text-xs text-amber-900 font-bold">
+                        Table {selectedInvoice.table.table_number} ({selectedInvoice.table.section || 'Dine-In'})
+                      </div>
+                    )}
                     <div className="text-[11px] text-stone-500">
                       {formatDateTime(selectedInvoice.created_at)}
                     </div>

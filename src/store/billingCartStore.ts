@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { CartItem, MenuItem, PaymentMethod, Invoice } from '../types';
+import type { CartItem, MenuItem, PaymentMethod, Invoice, RestaurantTable } from '../types';
 
 interface BillingCartState {
   items: CartItem[];
@@ -10,6 +10,10 @@ interface BillingCartState {
   referenceNumber: string;
   cashTendered: number;
   lastCompletedInvoice: Invoice | null;
+
+  // Active Table State
+  selectedTable: RestaurantTable | null;
+  activePendingInvoiceId: string | null;
 
   // Actions
   addItem: (menuItem: MenuItem) => void;
@@ -23,6 +27,10 @@ interface BillingCartState {
   setReferenceNumber: (ref: string) => void;
   setCashTendered: (amount: number) => void;
   setLastCompletedInvoice: (invoice: Invoice | null) => void;
+  setSelectedTable: (table: RestaurantTable | null) => void;
+  setActivePendingInvoiceId: (id: string | null) => void;
+  setCartItems: (items: CartItem[]) => void;
+  loadTableOrder: (table: RestaurantTable | null, catalog: MenuItem[]) => void;
   clearCart: () => void;
 
   // Calculations
@@ -43,6 +51,73 @@ export const useBillingCartStore = create<BillingCartState>()(
       referenceNumber: '',
       cashTendered: 0,
       lastCompletedInvoice: null,
+      selectedTable: null,
+      activePendingInvoiceId: null,
+
+      setSelectedTable: (table: RestaurantTable | null) => {
+        set({ selectedTable: table });
+      },
+
+      setActivePendingInvoiceId: (id: string | null) => {
+        set({ activePendingInvoiceId: id });
+      },
+
+      setCartItems: (items: CartItem[]) => {
+        set({ items });
+      },
+
+      loadTableOrder: (table: RestaurantTable | null, catalog: MenuItem[]) => {
+        if (!table) {
+          // Direct counter walk-in
+          set({
+            selectedTable: null,
+            activePendingInvoiceId: null,
+            items: [],
+            discountAmount: 0,
+            referenceNumber: '',
+            cashTendered: 0,
+          });
+          return;
+        }
+
+        if (table.activeInvoice) {
+          // Table is occupied: load existing items from the pending invoice
+          const loadedCartItems: CartItem[] = (table.activeInvoice.items || []).map((it) => {
+            const foundMenuItem = catalog.find((m) => m.id === it.menu_item_id);
+            const menuItem: MenuItem = foundMenuItem || {
+              id: it.menu_item_id || it.id,
+              category_id: null,
+              name: it.item_name,
+              price: it.unit_price,
+              is_available: true,
+              inventory_item_id: null,
+            };
+            return {
+              menuItem,
+              quantity: it.quantity,
+            };
+          });
+
+          set({
+            selectedTable: table,
+            activePendingInvoiceId: table.activeInvoice.id,
+            items: loadedCartItems,
+            discountAmount: table.activeInvoice.discount_amount || 0,
+            cashTendered: 0,
+            referenceNumber: '',
+          });
+        } else {
+          // Table is empty / available: start a fresh order
+          set({
+            selectedTable: table,
+            activePendingInvoiceId: null,
+            items: [],
+            discountAmount: 0,
+            cashTendered: 0,
+            referenceNumber: '',
+          });
+        }
+      },
 
       addItem: (menuItem: MenuItem) => {
         const currentItems = get().items;
@@ -150,39 +225,37 @@ export const useBillingCartStore = create<BillingCartState>()(
 
       getTaxAmount: () => {
         const subtotal = get().getSubtotal();
-        const discount = get().discountAmount;
-        const taxable = Math.max(0, subtotal - discount);
+        const taxable = Math.max(0, subtotal - get().discountAmount);
         return Math.round(taxable * get().taxRate * 100) / 100;
       },
 
       getTotalAmount: () => {
         const subtotal = get().getSubtotal();
-        const discount = get().discountAmount;
         const tax = get().getTaxAmount();
-        const total = Math.max(0, subtotal - discount) + tax;
-        return Math.round(total * 100) / 100;
+        const discounted = subtotal - get().discountAmount;
+        return Math.max(0, Math.round((discounted + tax) * 100) / 100);
       },
 
       getChangeDue: () => {
         const total = get().getTotalAmount();
         const tendered = get().cashTendered;
-        if (get().paymentMethod !== 'cash' || tendered <= 0) return 0;
-        return Math.max(0, Math.round((tendered - total) * 100) / 100);
+        if (tendered <= 0 || tendered < total) return 0;
+        return Math.round((tendered - total) * 100) / 100;
       },
 
       getItemCount: () => {
-        return get().items.reduce((count, item) => count + item.quantity, 0);
+        return get().items.reduce((sum, item) => sum + item.quantity, 0);
       },
     }),
     {
-      name: 'pos_billing_cart',
+      name: 'samsara-pos-cart',
       partialize: (state) => ({
         items: state.items,
-        taxRate: state.taxRate,
         discountAmount: state.discountAmount,
         paymentMethod: state.paymentMethod,
-        referenceNumber: state.referenceNumber,
-        cashTendered: state.cashTendered,
+        taxRate: state.taxRate,
+        selectedTable: state.selectedTable,
+        activePendingInvoiceId: state.activePendingInvoiceId,
       }),
     }
   )
