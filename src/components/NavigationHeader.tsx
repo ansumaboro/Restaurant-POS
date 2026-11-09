@@ -107,7 +107,7 @@ export const NavigationHeader: React.FC = () => {
             <span>Stock Audit</span>
           </NavLink>
           
-          {/* <NavLink
+          <NavLink
             to="/reports"
             className={({ isActive }) =>
               `flex items-center gap-2 px-3.5 py-1.5 rounded-md text-xs transition-colors ${isActive
@@ -118,7 +118,7 @@ export const NavigationHeader: React.FC = () => {
           >
             <BarChart3 className="w-3.5 h-3.5 text-amber-200/70" />
             <span>Reports</span>
-          </NavLink> */}
+          </NavLink>
         </nav>
       </div>
 
