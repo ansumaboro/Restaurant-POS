@@ -111,7 +111,7 @@ export const StockIn: React.FC = () => {
   return (
     <div className="flex-1 flex flex-col lg:flex-row h-[calc(100vh-3.5rem)] overflow-hidden bg-[#f5f4ef] select-none">
       {/* LEFT COLUMN: Inventory Item Selector */}
-      <div className="w-full lg:w-96 bg-white border-r border-stone-200 flex flex-col h-full overflow-hidden shadow-xs">
+      <div className="w-full lg:w-96 max-h-[calc(100vh-5rem)] bg-white border-r border-stone-200 flex flex-col h-full overflow-hidden shadow-xs">
         {/* Search Bar */}
         <div className="p-3 border-b border-stone-200 bg-stone-50/80">
           <div className="text-xs font-bold text-stone-700 uppercase tracking-wider mb-2 font-mono flex items-center justify-between">
