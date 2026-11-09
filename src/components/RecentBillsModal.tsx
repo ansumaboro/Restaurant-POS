@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { X, RefreshCw, Receipt } from 'lucide-react';
-import type { Invoice } from '../types';
+import { X, RefreshCw, Receipt, Printer } from 'lucide-react';
+import type { CartItem, Invoice, PaymentMethod } from '../types';
 import { billingService } from '../services/billingService';
 import { formatCurrency, formatDateTime } from '../utils/formatters';
+import { ReceiptModal } from './ReceiptModal';
 
 interface RecentBillsModalProps {
   isOpen: boolean;
@@ -17,11 +18,15 @@ export const RecentBillsModal: React.FC<RecentBillsModalProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
 
+  const [isReceiptOpen, setIsReceiptOpen] = useState<boolean>(false);
+
+
   const loadInvoices = async () => {
     setIsLoading(true);
     try {
       const data = await billingService.getRecentInvoices(25);
       setInvoices(data);
+      console.log(data)
       if (data.length > 0 && !selectedInvoice) {
         setSelectedInvoice(data[0]);
       }
@@ -37,6 +42,20 @@ export const RecentBillsModal: React.FC<RecentBillsModalProps> = ({
   }, [isOpen]);
 
   if (!isOpen) return null;
+  {/* Convert invoice.items into CartItem[] */ }
+  const receiptCartItems: CartItem[] = (selectedInvoice?.items || []).map((item) => ({
+    menuItem: {
+      id: item.menu_item_id || item.id,
+      name: item.item_name,
+      price: item.unit_price,
+      category_id: null,
+      is_available: true,
+      inventory_item_id: null,
+    },
+    quantity: item.quantity,
+  }));
+  {/* Primary payment from the invoice */ }
+  const payment = selectedInvoice?.payments?.[0];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-xs select-none">
@@ -91,19 +110,23 @@ export const RecentBillsModal: React.FC<RecentBillsModalProps> = ({
                       <tr
                         key={inv.id}
                         onClick={() => setSelectedInvoice(inv)}
-                        className={`cursor-pointer transition-colors ${
-                          isSelected
-                            ? 'bg-stone-100 text-stone-900 font-bold border-l-4 border-stone-900'
-                            : 'hover:bg-stone-50 text-stone-700'
-                        }`}
+                        className={`cursor-pointer transition-colors ${isSelected
+                          ? 'bg-stone-100 text-stone-900 font-bold border-l-4 border-stone-900'
+                          : 'hover:bg-stone-50 text-stone-700'
+                          }`}
                       >
                         <td className="py-2.5 px-3">
                           <span className="text-stone-900 font-bold">#{inv.id.slice(0, 8).toUpperCase()}</span>
-                          {inv.table && (
+                          {inv.table ? (
                             <span className="block text-[10px] text-amber-900 font-semibold">
                               {inv.table.table_number}
                             </span>
-                          )}
+                          ) : (
+                            <span className="block text-[10px] text-amber-900 font-semibold">
+                              Walk-in
+                            </span>
+                          )
+                          }
                         </td>
                         <td className="py-2.5 px-3 text-stone-500 text-[11px]">
                           {formatDateTime(inv.created_at)}
@@ -198,6 +221,14 @@ export const RecentBillsModal: React.FC<RecentBillsModalProps> = ({
                     {selectedInvoice.payments[0].reference_number}
                   </div>
                 )}
+                <button
+                  type="button"
+                  onClick={() => setIsReceiptOpen(true)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-stone-900 hover:bg-stone-800 text-stone-100 text-xs font-bold transition-colors shadow-xs"
+                >
+                  <Printer className="w-3.5 h-3.5" />
+                  <span>Print / View Receipt</span>
+                </button>
               </div>
             ) : (
               <div className="flex-1 flex items-center justify-center text-stone-400 text-xs font-medium">
@@ -218,6 +249,25 @@ export const RecentBillsModal: React.FC<RecentBillsModalProps> = ({
           </button>
         </div>
       </div>
+      {/* Printable Receipt Modal */}
+      {selectedInvoice && (
+      <ReceiptModal
+        isOpen={isReceiptOpen}
+        onClose={() => setIsReceiptOpen(false)}
+        invoice={selectedInvoice}
+        items={receiptCartItems}
+        paymentMethod={(payment?.payment_method as PaymentMethod) || 'cash'}
+        referenceNumber={payment?.reference_number || undefined}
+        cashTendered={payment?.amount_paid || selectedInvoice.total_amount}
+        changeDue={0}
+        cashierName="Cashier"
+        tableName={
+          selectedInvoice.table
+            ? `${selectedInvoice.table.table_number}${selectedInvoice.table.section ? ` (${selectedInvoice.table.section})` : ''}`
+            : undefined
+        }
+      />
+    )}
     </div>
   );
 };
