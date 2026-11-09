@@ -312,7 +312,7 @@ export const CounterBilling: React.FC = () => {
             isLoading={isTablesLoading}
           />
         ) : (
-          <div className="w-full lg:w-[420px] xl:w-[460px] bg-stone-50 flex flex-col justify-between border-l border-stone-200 h-full border-2 max-h-[90vh] overflow-hidden shadow-xs">
+          <div className="w-full lg:w-[420px] xl:w-[460px] bg-stone-50 flex flex-col justify-between border-l border-stone-200 h-full border-2 overflow-hidden shadow-xs">
             {/* Cart Header with Table Status Badge */}
             <div className="p-3.5 border-b border-stone-200 flex items-center justify-between bg-stone-100/70 shrink-0 font-mono">
               <div className="flex items-center gap-2 min-w-0 pr-2">
@@ -392,7 +392,7 @@ export const CounterBilling: React.FC = () => {
             )}
 
             {/* Cart Items List - Controlled Scrollable Container */}
-            <div className="flex-1 min-h-[180px] max-h-[220px] md:max-h-[250px] lg:max-h-[260px] xl:max-h-[320px] p-3 overflow-y-auto divide-y divide-stone-200/50">
+            <div className="flex-1 min-h-[150px] max-h-[220px] md:max-h-[250px] lg:max-h-[260px] xl:max-h-[320px] p-3 overflow-y-auto divide-y divide-stone-200/50">
               {cartItems.length === 0 ? (
                 <div className="h-full min-h-[140px] flex flex-col items-center justify-center text-center p-6 text-stone-400">
                   {selectedTable ? (
