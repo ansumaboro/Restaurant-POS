@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { 
-  Receipt, 
-  PackagePlus, 
-  ClipboardCheck, 
-  Lock, 
+import {
+  Receipt,
+  PackagePlus,
+  ClipboardCheck,
+  Lock,
   Clock,
-  Radio
+  BarChart3,
 } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { useBillingCartStore } from '../store/billingCartStore';
@@ -53,11 +53,10 @@ export const NavigationHeader: React.FC = () => {
           </div>
           <div className="flex flex-col">
             <span className="text-xs font-bold tracking-wider uppercase text-stone-200 truncate max-w-[140px] sm:max-w-none">
-              Samsara Bar and Restaurant
+              Samsara
             </span>
             <span className="text-[10px] text-stone-400 font-mono flex items-center gap-1 font-medium">
-              <Radio className="w-2.5 h-2.5 text-emerald-400" />
-              TERMINAL 01 &bull; ONLINE
+              Bar and Restaurant
             </span>
           </div>
         </div>
@@ -67,10 +66,9 @@ export const NavigationHeader: React.FC = () => {
           <NavLink
             to="/billing"
             className={({ isActive }) =>
-              `flex items-center gap-2 px-3.5 py-1.5 rounded-md text-xs transition-colors ${
-                isActive
-                  ? 'bg-stone-800 text-stone-100 border border-stone-700 shadow-xs font-semibold'
-                  : 'text-stone-400 hover:text-stone-200 hover:bg-slate-800 font-medium'
+              `flex items-center gap-2 px-3.5 py-1.5 rounded-md text-xs transition-colors ${isActive
+                ? 'bg-stone-800 text-stone-100 border border-stone-700 shadow-xs font-semibold'
+                : 'text-stone-400 hover:text-stone-200 hover:bg-slate-800 font-medium'
               }`
             }
           >
@@ -86,10 +84,9 @@ export const NavigationHeader: React.FC = () => {
           <NavLink
             to="/stock-in"
             className={({ isActive }) =>
-              `flex items-center gap-2 px-3.5 py-1.5 rounded-md text-xs transition-colors ${
-                isActive
-                  ? 'bg-stone-800 text-stone-100 border border-stone-700 shadow-xs font-semibold'
-                  : 'text-stone-400 hover:text-stone-200 hover:bg-slate-800 font-medium'
+              `flex items-center gap-2 px-3.5 py-1.5 rounded-md text-xs transition-colors ${isActive
+                ? 'bg-stone-800 text-stone-100 border border-stone-700 shadow-xs font-semibold'
+                : 'text-stone-400 hover:text-stone-200 hover:bg-slate-800 font-medium'
               }`
             }
           >
@@ -100,16 +97,28 @@ export const NavigationHeader: React.FC = () => {
           <NavLink
             to="/audit"
             className={({ isActive }) =>
-              `flex items-center gap-2 px-3.5 py-1.5 rounded-md text-xs transition-colors ${
-                isActive
-                  ? 'bg-stone-800 text-stone-100 border border-stone-700 shadow-xs font-semibold'
-                  : 'text-stone-400 hover:text-stone-200 hover:bg-slate-800 font-medium'
+              `flex items-center gap-2 px-3.5 py-1.5 rounded-md text-xs transition-colors ${isActive
+                ? 'bg-stone-800 text-stone-100 border border-stone-700 shadow-xs font-semibold'
+                : 'text-stone-400 hover:text-stone-200 hover:bg-slate-800 font-medium'
               }`
             }
           >
             <ClipboardCheck className="w-3.5 h-3.5 text-amber-200/70" />
             <span>Stock Audit</span>
           </NavLink>
+          
+          {/* <NavLink
+            to="/reports"
+            className={({ isActive }) =>
+              `flex items-center gap-2 px-3.5 py-1.5 rounded-md text-xs transition-colors ${isActive
+                ? 'bg-stone-800 text-stone-100 border border-stone-700 shadow-xs font-semibold'
+                : 'text-stone-400 hover:text-stone-200 hover:bg-slate-800 font-medium'
+              }`
+            }
+          >
+            <BarChart3 className="w-3.5 h-3.5 text-amber-200/70" />
+            <span>Reports</span>
+          </NavLink> */}
         </nav>
       </div>
 
