@@ -2,6 +2,7 @@ import React from 'react';
 import { Printer, CheckCircle2, X } from 'lucide-react';
 import type { Invoice, CartItem, PaymentMethod } from '../types';
 import { formatCurrency, formatDateTime } from '../utils/formatters';
+import { businessConfig } from '../config/businessConfig';
 
 interface ReceiptModalProps {
   isOpen: boolean;
@@ -59,9 +60,10 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
           <div id="printable-receipt" className="bg-white p-5 rounded-xl border border-stone-200 text-stone-800 shadow-xs">
             {/* Business Header */}
             <div className="text-center pb-4 border-b border-dashed border-stone-300">
-              <h2 className="text-base font-bold text-stone-900 tracking-wider">SAMSARA BAR AND RESTAURANT</h2>
-              <p className="text-[11px] text-stone-500 font-medium">Terminal 01 &bull; Commercial Counter POS</p>
+              <h2 className="text-base font-bold text-stone-900 tracking-wider">{businessConfig.legalName}</h2>
+              <p className="text-[11px] text-stone-500 font-medium">{businessConfig.address}</p>
               <p className="text-[10px] text-stone-400 mt-1">GSTIN: 07AAAAA0000A1Z5</p>
+              <p className="text-[10px] text-stone-400 mt-1">Phone: {businessConfig.contact.phone}</p>
             </div>
 
             {/* Bill Metadata */}
